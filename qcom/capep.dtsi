@@ -1,0 +1,20 @@
+// SPDX-License-Identifier: BSD-3-Clause
+// SPDX-FileCopyrightText: 2026 The PenguinOS Project
+
+#include "cape.dtsi"
+
+/ {
+	model = "Qualcomm Technologies, Inc. CapeP";
+	compatible = "qcom,capep";
+	qcom,msm-id = <QCOM_ID_SM8475P 0x10000>;
+};
+
+&soc {
+	qcom,rmnet-ipa {
+		status = "disabled";
+	};
+};
+
+&ipa_hw {
+	status = "disabled";
+};

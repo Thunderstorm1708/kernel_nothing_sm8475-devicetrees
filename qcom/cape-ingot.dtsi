@@ -1,0 +1,549 @@
+// SPDX-License-Identifier: BSD-3-Clause
+// SPDX-FileCopyrightText: The LineageOS Project
+
+#include <dt-bindings/clock/qcom,rpmh.h>
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/input/input.h>
+#include <dt-bindings/phy/qcom,usb3-4nm-qmp-combo.h>
+
+#include "cape-pmic-overlay.dtsi"
+#include "waipio-pm8010-spmi.dtsi"
+#include "waipio-thermal-overlay.dtsi"
+
+#include "cape-ingot-regulators.dtsi"
+
+&battery_charger {
+	compatible = "osom,ingot-battery-charger",
+		     "qcom,waipio-battery-charger",
+		     "qcom,battery-charger";
+
+	qcom,thermal-mitigation-step = <500000>;
+	#cooling-cells = <2>;
+};
+
+&bluetooth {
+	clocks = <&rpmhcc RPMH_RF_CLK3>;
+	clock-names = "rf_clk";
+};
+
+&pm8350c_flash {
+	status = "okay";
+};
+
+&pm8350b_haptics {
+	qcom,fifo-empty-threshold = <480>;
+	qcom,fifo-vmax-mv = <8700>;
+	qcom,lra-period-us = <5882>;
+	qcom,vmax-mv = <1650>;
+
+	status = "okay";
+
+	effect_0 {
+		/* CLICK */
+		qcom,wf-vmax-mv = <1800>;
+		qcom,wf-pattern-period-us = <5880>;
+	};
+
+	effect_1 {
+		/* DOUBLE_CLICK */
+		qcom,wf-vmax-mv = <1800>;
+		qcom,wf-pattern-period-us = <5880>;
+	};
+
+	effect_2 {
+		/* TICK */
+		qcom,wf-vmax-mv = <1800>;
+		qcom,wf-pattern-period-us = <5880>;
+	};
+
+	effect_3 {
+		/* THUD */
+		qcom,wf-vmax-mv = <1800>;
+		qcom,wf-pattern-period-us = <5880>;
+	};
+
+	effect_4 {
+		/* POP */
+		qcom,wf-vmax-mv = <1800>;
+		qcom,wf-pattern-period-us = <5880>;
+	};
+
+	effect_5 {
+		/* HEAVY CLICK */
+		qcom,wf-vmax-mv = <1800>;
+		qcom,wf-pattern-period-us = <5880>;
+	};
+};
+
+&pm8350c_switch0 {
+	qcom,led-mask = <9>; /* Channels 1 & 4 */
+	qcom,symmetry-en;
+};
+
+&pm8350c_switch1 {
+	qcom,led-mask = <6>; /* Channels 2 & 3 */
+	qcom,symmetry-en;
+};
+
+&pm8350c_switch2 {
+	qcom,led-mask = <15>; /* All Channels */
+	qcom,symmetry-en;
+};
+
+&pmr735b {
+	status = "disabled";
+};
+
+&qcom_ramoops {
+	status = "disabled";
+};
+
+&qupv3_se4_i2c {
+	status = "okay";
+
+	touchscreen@38 {
+		compatible = "focaltech,fts_ts";
+		reg = <0x38>;
+
+		pinctrl-0 = <&ts_active>;
+		pinctrl-1 = <&ts_int_suspend &ts_reset_suspend>;
+		pinctrl-2 = <&ts_release>;
+		pinctrl-names = "pmx_ts_active", "pmx_ts_suspend", "pmx_ts_release";
+
+		vcc_i2c-supply = <&L8C>;
+		vdd-supply = <&L3C>;
+
+		focaltech,display-coords = <0 0 1080 2400>;
+		focaltech,ic-type = <0x35190489>;
+		focaltech,irq-gpio = <&tlmm 21 GPIO_ACTIVE_LOW>;
+		focaltech,max-touch-number = <10>;
+		focaltech,reset-gpio = <&tlmm 20 GPIO_ACTIVE_HIGH>;
+		focaltech,touch-type = "primary";
+	};
+};
+
+&qupv3_se5_i2c {
+	status = "okay";
+
+	onnn_nb7vpq904m: onnn-nb7vpq904m@1c {
+		compatible = "onnn,redriver";
+		reg = <0x1c>;
+
+		vdd-supply = <&S10B>;
+
+		eq = /bits/ 8 <
+				/* Parameters for USB */
+				0x5 0x5 0x5 0x5
+				/* Parameters for DP */
+				0x4 0x6 0x6 0x4>;
+		flat-gain = /bits/ 8 <
+				/* Parameters for USB */
+				0x2 0x3 0x3 0x2
+				/* Parameters for DP */
+				0x0 0x3 0x3 0x0>;
+		output-comp = /bits/ 8 <
+				/* Parameters for USB */
+				0x3 0x3 0x3 0x3
+				/* Parameters for DP */
+				0x3 0x3 0x3 0x3>;
+		loss-match = /bits/ 8 <
+				/* Parameters for USB */
+				0x1 0x3 0x3 0x1
+				/* Parameters for DP */
+				0x3 0x3 0x3 0x3>;
+	};
+
+	nxp_ptn3222: nxp-ptn3222@43 {
+		compatible = "nxp,eusb2-repeater";
+		reg = <0x43>;
+
+		pinctrl-0 = <&eusb2_reset_ctrl_default>;
+		pinctrl-names = "default";
+
+		reset-gpios = <&pm8350c_gpios 7 GPIO_ACTIVE_HIGH>;
+
+		vdd1v8-supply = <&S10B>;
+		vdd3v3-supply = <&L2B>;
+
+		qcom,param-override-seq = <
+			/* Rx squelch detection threshold to 110mV; default is 125mV */
+			0x40 0x06
+			/* Tx Deemphasis to 2dB, Tx Deemphasis bit duration to 0.8UI */
+			0x22 0x07
+			/* Output Voltage Swing to 550mV; default is 450mV */
+			0x64 0x08
+		>;
+	};
+};
+
+&qupv3_se8_spi {
+	status = "okay";
+
+	ese@0 {
+		compatible = "st,st54spi";
+		reg = <0>;
+
+		pinctrl-0 = <&ese_reset_default>;
+		pinctrl-names = "default";
+
+		spi-max-frequency = <8000000>;
+
+		esereset-gpio = <&tlmm 49 GPIO_ACTIVE_HIGH>;
+		power_mode = "ST54Jse";
+	};
+};
+
+&qupv3_se9_i2c {
+	pinctrl-0 = <&nfc_i2c_active>;
+	pinctrl-1 = <&nfc_i2c_sleep>;
+	pinctrl-names = "default", "sleep";
+
+	status = "okay";
+
+	nfc@8 {
+		compatible = "st,st21nfc";
+		reg = <0x08>;
+
+		pinctrl-0 = <&nfc_int_active &nfc_ctrl_default
+			     &nfc_clkreq_default>;
+		pinctrl-names = "default";
+
+		interrupt-parent = <&tlmm>;
+		interrupts = <46 IRQ_TYPE_LEVEL_HIGH>;
+
+		clkreq-gpios = <&tlmm 35 GPIO_ACTIVE_HIGH>;
+		irq-gpios = <&tlmm 46 GPIO_ACTIVE_HIGH>;
+		reset-gpios = <&tlmm 34 GPIO_ACTIVE_HIGH>;
+
+		st,clk_pinctrl;
+	};
+};
+
+&qupv3_se19_spi {
+	qcom,irq-cpu = <6>;
+
+	status = "okay";
+
+	uwb@0 {
+		compatible = "decawave,dw3720", "decawave,dw3000";
+		reg = <0>;
+
+		clocks = <&rpmhcc RPMH_RF_CLK5>;
+		clock-names = "xo";
+
+		pinctrl-0 = <&uwb_int_default &uwb_reset_default>;
+		pinctrl-names = "default";
+
+		interrupt-parent = <&tlmm>;
+		interrupts = <71 IRQ_TYPE_LEVEL_HIGH>;
+
+		reset-gpios = <&tlmm 70 (GPIO_ACTIVE_LOW | GPIO_OPEN_DRAIN)>;
+
+		power_reg-supply = <&S10B>;
+		power_reg_1p8-supply = <&L4J>;
+		power_reg_2p5-supply = <&L7J>;
+
+		cpu = <6>;
+		min_clamp = <900>;
+		qos_latency = <100>;
+
+		spi-max-frequency = <38000000>;
+	};
+};
+
+&reserved_memory {
+	#address-cells = <2>;
+	#size-cells = <2>;
+	ranges;
+
+	ramoops@f1400000 {
+		compatible = "ramoops";
+		reg = <0x0 0xf1400000 0x0 0x400000>;
+		console-size = <0x200000>;
+		pmsg-size = <0x200000>;
+		no-map;
+	};
+};
+
+&sdhc_2 {
+	pinctrl-names = "default", "sleep";
+	pinctrl-0 = <&sdc2_on>;
+	pinctrl-1 = <&sdc2_off>;
+
+	cd-gpios = <&tlmm 92 GPIO_ACTIVE_HIGH>;
+
+	vdd-supply = <&L9C>;
+	qcom,vdd-voltage-level = <2960000 2960000>;
+	qcom,vdd-current-level = <0 800000>;
+
+	vdd-io-supply = <&L6C>;
+	qcom,vdd-io-voltage-level = <1800000 2960000>;
+	qcom,vdd-io-current-level = <0 125000>;
+
+	status = "okay";
+};
+
+&soc {
+	gpio-keys {
+		compatible = "gpio-keys";
+
+		pinctrl-0 = <&key_vol_up_default>;
+		pinctrl-names = "default";
+
+		key-volume-up {
+			label = "Volume Up";
+			linux,code = <KEY_VOLUMEUP>;
+			gpios = <&pm8350_gpios 6 GPIO_ACTIVE_LOW>;
+			debounce-interval = <15>;
+			linux,can-disable;
+			wakeup-source;
+		};
+	};
+
+	fingerprint {
+		compatible = "betterlife,fingerprint";
+
+		pinctrl-0 = <&fp_int_default &fp_reset_default>;
+		pinctrl-names = "default";
+
+		vcc-supply = <&L11C>;
+
+		fpint-gpio = <&tlmm 40 GPIO_ACTIVE_HIGH>;
+		fpreset-gpio = <&tlmm 41 GPIO_ACTIVE_HIGH>;
+	};
+};
+
+&tlmm {
+	/* Fingerprint (BF83112) */
+	qcom,gpios-reserved = <36 37 38 39>;
+
+	nfc_i2c_active: nfc_i2c_active {
+		mux {
+			pins = "gpio32", "gpio33";
+			function = "qup9";
+		};
+
+		config {
+			pins = "gpio32", "gpio33";
+			drive-strength = <2>; /* 2 mA */
+			bias-disable;
+		};
+	};
+
+	nfc_i2c_sleep: nfc_i2c_sleep {
+		mux {
+			pins = "gpio32", "gpio33";
+			function = "gpio";
+		};
+
+		config {
+			pins = "gpio32", "gpio33";
+			drive-strength = <2>; /* 2 mA */
+			bias-disable;
+		};
+	};
+
+	nfc_ctrl_default: nfc_ctrl_default {
+		mux {
+			pins = "gpio34";
+			function = "gpio";
+		};
+
+		config {
+			pins = "gpio34";
+			drive-strength = <2>; /* 2 mA */
+			bias-disable;
+		};
+	};
+
+	nfc_clkreq_default: nfc_clkreq_default {
+		mux {
+			pins = "gpio35";
+			function = "gpio";
+		};
+
+		config {
+			pins = "gpio35";
+			drive-strength = <2>; /* 2 mA */
+			bias-pull-down;
+		};
+	};
+
+	ese_reset_default: ese_reset_default {
+		mux {
+			pins = "gpio49";
+			function = "gpio";
+		};
+
+		config {
+			pins = "gpio49";
+			drive-strength = <2>; /* 2 mA */
+			bias-disable;
+		};
+	};
+
+	uwb_int_default: uwb_int_default {
+		mux {
+			pins = "gpio71";
+			function = "gpio";
+		};
+
+		config {
+			pins = "gpio71";
+			drive-strength = <2>; /* 2 mA */
+			bias-disable;
+		};
+	};
+
+	uwb_reset_default: uwb_reset_default {
+		mux {
+			pins = "gpio70";
+			function = "gpio";
+		};
+
+		config {
+			pins = "gpio70";
+			drive-strength = <2>; /* 2 mA */
+			bias-disable;
+		};
+	};
+
+	fp_int_default: fp_int_default {
+		mux {
+			pins = "gpio40";
+			function = "gpio";
+		};
+
+		config {
+			pins = "gpio40";
+			drive-strength = <2>; /* 2 mA */
+			bias-pull-down;
+		};
+	};
+
+	fp_reset_default: fp_reset_default {
+		mux {
+			pins = "gpio41";
+			function = "gpio";
+		};
+
+		config {
+			pins = "gpio41";
+			drive-strength = <2>; /* 2 mA */
+			bias-disable;
+		};
+	};
+};
+
+&trust_ui_vm_mem {
+	reg = <0x0 0xe0b00000 0x0 0x78f3000>;
+};
+
+&trust_ui_vm_qrtr {
+	reg = <0x0 0xe83f3000 0x0 0x9000>;
+};
+
+&trust_ui_vm_swiotlb {
+	reg = <0x0 0xe8400000 0x0 0x100000>;
+};
+
+&trust_ui_vm_vblk0_ring {
+	reg = <0x0 0xe83fc000 0x0 0x4000>;
+};
+
+&trust_ui_vm {
+	reg = <0xe83fc000 0x104000>;
+};
+
+&ucsi {
+	connector {
+		port {
+			usb_port0_connector: endpoint {
+				remote-endpoint = <&usb_port0>;
+			};
+		};
+	};
+};
+
+&uefi_log_mem {
+	reg = <0x0 0xa7605000 0x0 0x8000>;
+};
+
+&ufsphy_mem {
+	compatible = "qcom,ufs-phy-qmp-v4-cape";
+
+	vdda-phy-supply = <&L5B>;
+	vdda-pll-supply = <&L10C>;
+	vdda-phy-max-microamp = <197000>;
+	vdda-pll-max-microamp = <23700>;
+
+	status = "okay";
+};
+
+&ufshc_mem {
+	vdd-hba-supply = <&gcc_ufs_phy_gdsc>;
+
+	vcc-supply = <&L7B>;
+	vcc-max-microamp = <600000>;
+
+	vccq-supply = <&L9B>;
+	vccq-max-microamp = <900000>;
+
+	qcom,vddp-ref-clk-supply = <&L9B>;
+	qcom,vddp-ref-clk-max-microamp = <100>;
+
+	status = "okay";
+};
+
+&usb2_phy0 {
+	usb-repeater = <&nxp_ptn3222>;
+};
+
+&usb3phy_portselect_default {
+	config {
+		bias-pull-down;
+	};
+};
+
+&usb3phy_portselect_gpio {
+	config {
+		bias-pull-down;
+	};
+};
+
+&usb_qmp_dp_phy {
+	pinctrl-names = "unused";
+
+	qcom,qmp-phy-override-seq = <
+		USB3_DP_QSERDES_RXA_RX_MODE_01_HIGH4 0x0D
+		USB3_DP_QSERDES_TXB_TX_DRV_LVL 0x38
+		USB3_DP_QSERDES_RXB_RX_MODE_01_HIGH4 0x0D
+	>;
+};
+
+&usb0 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&usb3phy_portselect_gpio>;
+
+	gpios = <&tlmm 91 GPIO_ACTIVE_HIGH>;
+
+	ssusb_redriver = <&onnn_nb7vpq904m>;
+	usb-role-switch;
+
+	dwc3@a600000 {
+		usb-role-switch;
+	};
+
+	port {
+		usb_port0: endpoint {
+			remote-endpoint = <&usb_port0_connector>;
+		};
+	};
+};
+
+&wlan {
+	clocks = <&rpmhcc RPMH_RF_CLK3>;
+	clock-names = "rf_clk";
+
+	use-nv-mac;
+};

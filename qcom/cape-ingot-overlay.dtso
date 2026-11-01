@@ -1,0 +1,16 @@
+// SPDX-License-Identifier: BSD-3-Clause
+// SPDX-FileCopyrightText: The LineageOS Project
+
+/dts-v1/;
+/plugin/;
+
+#include <dt-bindings/arm/qcom,ids.h>
+
+#include "cape-ingot.dtsi"
+
+/ {
+	model = "OSOM Saga";
+	compatible = "osom,ingot", "qcom,cape";
+	qcom,board-id = <QCOM_BOARD_ID(QRD, 1, 0) 0>;
+	qcom,msm-id = <QCOM_ID_SM8475 0x10000>;
+};

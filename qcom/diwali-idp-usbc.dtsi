@@ -1,0 +1,10 @@
+// SPDX-License-Identifier: BSD-3-Clause
+/*
+ * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+ */
+
+#include "diwali-idp.dtsi"
+#include "diwali-idp-pm7250b.dtsi"
+
+&soc {
+};

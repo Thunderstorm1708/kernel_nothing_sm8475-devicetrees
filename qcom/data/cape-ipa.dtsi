@@ -1,0 +1,23 @@
+// SPDX-License-Identifier: BSD-3-Clause
+// SPDX-FileCopyrightText: 2026 The PenguinOS Project
+
+#include "waipio-ipa.dtsi"
+
+/*
+ * Keep IPA's buffers below 4G. 6.12 reserves only 0x40000000-0xffffffff around the
+ * 0x20000000 window, so with a 64-bit mask the IOVAs land above 4G, and the uC and parts
+ * of GSI use only their low 32 bits: they hit unmapped 0xffxxxxxx, faulting at boot and
+ * panicking the kernel when USB offload starts.
+ */
+&ipa_hw {
+	/delete-property/ qcom,use-64-bit-dma-mask;
+};
+
+&ipa_smmu_ap {
+	qcom,iommu-dma = "atomic";
+	qcom,ipa-q6-smem-size = <36864>;
+};
+
+&ipa_smmu_11ad {
+	iommus = <&apps_smmu 0x5c3 0x0>;
+};

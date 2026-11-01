@@ -1,0 +1,15 @@
+// SPDX-License-Identifier: BSD-3-Clause
+/*
+ * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+ */
+
+/dts-v1/;
+
+#include "diwali-vm.dtsi"
+#include "diwali-vm-rumi.dtsi"
+
+/ {
+	model = "Qualcomm Technologies, Inc. Diwali SVM RUMI";
+	compatible = "qcom,diwali-rumi", "qcom,diwali", "qcom,rumi";
+	qcom,board-id = <15 0>;
+};

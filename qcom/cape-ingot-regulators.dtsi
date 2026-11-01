@@ -1,0 +1,151 @@
+// SPDX-License-Identifier: BSD-3-Clause
+// SPDX-FileCopyrightText: The LineageOS Project
+
+#include <dt-bindings/regulator/qcom,rpmh-regulator-levels.h>
+
+&apps_rsc_drv2 {
+	rpmh-regulator-ldoc2 {
+		status = "disabled";
+	};
+
+	rpmh-regulator-ldoc11 {
+		compatible = "qcom,rpmh-vrm-regulator";
+		qcom,resource-name = "ldoc11";
+		qcom,regulator-type = "pmic5-ldo";
+		qcom,supported-modes =
+			<RPMH_REGULATOR_MODE_LPM
+			RPMH_REGULATOR_MODE_HPM>;
+		qcom,mode-threshold-currents = <0 30000>;
+		L11C: pm8350c_l11: regulator-pm8350c-l11 {
+			regulator-name = "pm8350c_l11";
+			qcom,set = <RPMH_REGULATOR_SET_ALL>;
+			regulator-min-microvolt = <3000000>;
+			regulator-max-microvolt = <3000000>;
+			qcom,init-voltage = <3000000>;
+			qcom,init-mode = <RPMH_REGULATOR_MODE_HPM>;
+		};
+	};
+
+	rpmh-regulator-ldof1 {
+		status = "disabled";
+	};
+
+	rpmh-regulator-ldof2 {
+		status = "disabled";
+	};
+
+	rpmh-regulator-ldof3 {
+		status = "disabled";
+	};
+
+	rpmh-regulator-ldof4 {
+		status = "disabled";
+	};
+
+	rpmh-regulator-ldof5 {
+		status = "disabled";
+	};
+
+	rpmh-regulator-ldof6 {
+		status = "disabled";
+	};
+
+	rpmh-regulator-ldoi1 {
+		compatible = "qcom,rpmh-vrm-regulator";
+		qcom,resource-name = "ldoi1";
+		qcom,regulator-type = "pmic5-ldo";
+		L1I: pm8010i_l1: regulator-pm8010i-l1 {
+			regulator-name = "pm8010i_l1";
+			qcom,set = <RPMH_REGULATOR_SET_ALL>;
+			regulator-min-microvolt = <480000>;
+			regulator-max-microvolt = <1104000>;
+			qcom,init-voltage = <1104000>;
+		};
+	};
+
+	rpmh-regulator-ldoi5 {
+		compatible = "qcom,rpmh-vrm-regulator";
+		qcom,resource-name = "ldoi5";
+		qcom,regulator-type = "pmic5-ldo";
+		L5I: pm8010i_l5: regulator-pm8010i-l5 {
+			regulator-name = "pm8010i_l5";
+			qcom,set = <RPMH_REGULATOR_SET_ALL>;
+			regulator-min-microvolt = <2800000>;
+			regulator-max-microvolt = <2800000>;
+			qcom,init-voltage = <2800000>;
+		};
+	};
+
+	rpmh-regulator-ldoj2 {
+		status = "disabled";
+	};
+};
+
+&L6B {
+	regulator-always-on;
+	regulator-boot-on;
+};
+
+&L4C {
+	regulator-min-microvolt = <1800000>;
+	regulator-max-microvolt = <1800000>;
+	qcom,init-voltage = <1800000>;
+};
+
+&L5C {
+	regulator-min-microvolt = <1800000>;
+	regulator-max-microvolt = <1800000>;
+	qcom,init-voltage = <1800000>;
+};
+
+&L6C {
+	regulator-boot-on;
+};
+
+&L2I {
+	regulator-min-microvolt = <1104000>;
+	regulator-max-microvolt = <1104000>;
+	qcom,init-voltage = <1104000>;
+};
+
+&L3I {
+	regulator-min-microvolt = <2800000>;
+	regulator-max-microvolt = <2800000>;
+	qcom,init-voltage = <2800000>;
+};
+
+&L6I {
+	regulator-min-microvolt = <1800000>;
+	regulator-max-microvolt = <1800000>;
+	qcom,init-voltage = <1800000>;
+};
+
+&L7I {
+	regulator-min-microvolt = <2800000>;
+	regulator-max-microvolt = <2800000>;
+	qcom,init-voltage = <2800000>;
+};
+
+&L1J {
+	regulator-min-microvolt = <1000000>;
+	regulator-max-microvolt = <1150000>;
+	qcom,init-voltage = <1056000>;
+};
+
+&L4J {
+	regulator-min-microvolt = <1800000>;
+	regulator-max-microvolt = <1800000>;
+	qcom,init-voltage = <1800000>;
+};
+
+&L6J {
+	regulator-min-microvolt = <1800000>;
+	regulator-max-microvolt = <1800000>;
+	qcom,init-voltage = <1800000>;
+};
+
+&L7J {
+	regulator-min-microvolt = <2700000>;
+	regulator-max-microvolt = <2800000>;
+	qcom,init-voltage = <2800000>;
+};

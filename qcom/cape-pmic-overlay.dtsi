@@ -1,0 +1,47 @@
+// SPDX-License-Identifier: BSD-3-Clause
+/*
+ * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+ */
+
+#include "waipio-pmic-overlay.dtsi"
+
+&pm8350b_haptics {
+	status = "okay";
+};
+
+&pm8350c_gpios {
+	eusb2_reset_ctrl {
+		eusb2_reset_ctrl_default: eusb2_reset_ctrl_default {
+			pins = "gpio7";
+			function = "normal";
+			input-enable;
+			output-enable;
+			bias-disable;
+			power-source = <1>; /* 1.8V */
+			qcom,drive-strength = <2>;
+		};
+	};
+};
+
+&pmk8350_sdam_23 {
+	adc_scaling: scaling@bf {
+		reg = <0xbf 0x1>;
+		bits = <0 2>;
+	};
+};
+
+&pmk8350_vadc {
+	pm8350b_ichg_fb_2x {
+		reg = <PM8350B_ADC7_ICHG_FB>;
+		label = "pm8350b_ichg_fb_2x";
+		qcom,pre-scaling = <1000 610370>;
+		status = "disabled";
+	};
+
+	pm8350b_ichg_fb_2p5x {
+		reg = <PM8350B_ADC7_ICHG_FB>;
+		label = "pm8350b_ichg_fb_2p5x";
+		qcom,pre-scaling = <1000 762963>;
+		status = "disabled";
+	};
+};

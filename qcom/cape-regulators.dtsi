@@ -1,0 +1,202 @@
+// SPDX-License-Identifier: BSD-3-Clause
+/*
+ * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+ */
+
+#include <dt-bindings/regulator/qcom,rpmh-regulator-levels.h>
+
+&apps_rsc_drv2 {
+	/delete-node/ rpmh-regulator-ldoc1;
+	/delete-node/ rpmh-regulator-smpe1;
+
+	rpmh-regulator-ldob6 {
+		/delete-node/ regulator-pm8350-l6-ao;
+		/delete-node/ regulator-pm8350-l6-so;
+	};
+
+	rpmh-regulator-ldoc10 {
+		L10C_AO: pm8350c_l10_ao: regulator-pm8350c-l10-ao {
+			regulator-name = "pm8350c_l10_ao";
+			qcom,set = <RPMH_REGULATOR_SET_ACTIVE>;
+			regulator-min-microvolt = <1200000>;
+			regulator-max-microvolt = <1200000>;
+			qcom,init-voltage = <1200000>;
+			qcom,init-mode = <RPMH_REGULATOR_MODE_LPM>;
+		};
+
+		regulator-pm8350c-l10-so {
+			regulator-name = "pm8350c_l10_so";
+			qcom,set = <RPMH_REGULATOR_SET_SLEEP>;
+			regulator-min-microvolt = <1200000>;
+			regulator-max-microvolt = <1200000>;
+			qcom,init-voltage = <1200000>;
+			qcom,init-mode = <RPMH_REGULATOR_MODE_LPM>;
+			qcom,init-enable = <0>;
+		};
+	};
+
+	rpmh-regulator-mmcxlvl {
+		/delete-node/ regulator-pm8450-s4-level-so;
+	};
+};
+
+&L1B {
+	regulator-min-microvolt = <830000>;
+};
+
+&L2B {
+	regulator-min-microvolt = <2700000>;
+	regulator-max-microvolt = <3300000>;
+};
+
+&L3B {
+	regulator-min-microvolt = <870000>;
+	regulator-max-microvolt = <970000>;
+};
+
+&L5B {
+	regulator-min-microvolt = <720000>;
+	regulator-max-microvolt = <958000>;
+};
+
+&L6B {
+	regulator-max-microvolt = <1216000>;
+};
+
+&L7B {
+	regulator-min-microvolt = <2400000>;
+	regulator-max-microvolt = <3544000>;
+};
+
+&L9B {
+	regulator-max-microvolt = <1304000>;
+};
+
+&L10C {
+	regulator-max-microvolt = <1304000>;
+};
+
+&L12C {
+	regulator-max-microvolt = <1980000>;
+};
+
+&L13C {
+	regulator-min-microvolt = <2700000>;
+	regulator-max-microvolt = <3544000>;
+	qcom,init-voltage = <2700000>;
+};
+
+&L2C {
+	regulator-max-microvolt = <1980000>;
+};
+
+&L3C {
+	regulator-min-microvolt = <2700000>;
+	regulator-max-microvolt = <3544000>;
+	qcom,init-voltage = <2700000>;
+};
+
+&L4C {
+	regulator-min-microvolt = <1620000>;
+	regulator-max-microvolt = <3300000>;
+	qcom,init-voltage = <1620000>;
+};
+
+&L5C {
+	regulator-min-microvolt = <1620000>;
+	regulator-max-microvolt = <3300000>;
+	qcom,init-voltage = <1620000>;
+};
+
+&L6C {
+	regulator-max-microvolt = <3544000>;
+};
+
+&L7C {
+	regulator-min-microvolt = <3000000>;
+	regulator-max-microvolt = <3544000>;
+	qcom,init-voltage = <3000000>;
+};
+
+&L8C {
+	regulator-max-microvolt = <2000000>;
+};
+
+&L9C {
+	regulator-min-microvolt = <2700000>;
+	regulator-max-microvolt = <3544000>;
+};
+
+&L1E {
+	regulator-max-microvolt = <880000>;
+};
+
+&L2E {
+	regulator-max-microvolt = <1200000>;
+	qcom,init-voltage = <480000>;
+};
+
+&L5E {
+	regulator-max-microvolt = <920000>;
+};
+
+&L7E {
+	/delete-property/ qcom,init-mode;
+};
+
+&L6F {
+	qcom,init-voltage = <480000>;
+};
+
+&L2H {
+	regulator-min-microvolt = <820000>;
+	regulator-max-microvolt = <958000>;
+	qcom,init-voltage = <820000>;
+};
+
+&L3H {
+	regulator-min-microvolt = <866000>;
+	regulator-max-microvolt = <958000>;
+	qcom,init-voltage = <866000>;
+};
+
+&S11B {
+	regulator-min-microvolt = <382000>;
+	regulator-max-microvolt = <1170000>;
+};
+
+&S12B {
+	regulator-max-microvolt = <2040000>;
+};
+
+&S1C {
+	qcom,init-voltage = <1880000>;
+};
+
+&S10C {
+	regulator-min-microvolt = <1052000>;
+	regulator-max-microvolt = <1170000>;
+};
+
+&S2E {
+	qcom,init-voltage = <500000>;
+};
+
+&S3E {
+	regulator-min-microvolt = <300000>;
+	qcom,init-voltage = <300000>;
+};
+
+&S3H {
+	regulator-min-microvolt = <470000>;
+	regulator-max-microvolt = <570000>;
+};
+
+&VDD_MMCX_LEVEL {
+	regulator-min-microvolt = <RPMH_REGULATOR_LEVEL_RETENTION>;
+};
+
+&VDD_MMCX_LEVEL_AO {
+	regulator-min-microvolt = <RPMH_REGULATOR_LEVEL_RETENTION>;
+	qcom,init-voltage-level = <RPMH_REGULATOR_LEVEL_RETENTION>;
+};

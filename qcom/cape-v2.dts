@@ -1,0 +1,14 @@
+// SPDX-License-Identifier: BSD-3-Clause
+// SPDX-FileCopyrightText: 2026 The PenguinOS Project
+
+/dts-v1/;
+
+#include <dt-bindings/arm/qcom,ids.h>
+
+#include "cape-v2.dtsi"
+
+/ {
+	model = "Qualcomm Technologies, Inc. Cape LTE Only SoC";
+	compatible = "qcom,cape-v2";
+	qcom,board-id = <0 0>;
+};

@@ -1,0 +1,10 @@
+// SPDX-License-Identifier: BSD-3-Clause
+// SPDX-FileCopyrightText: 2026 The PenguinOS Project
+
+#include "cape.dtsi"
+
+/ {
+	model = "Qualcomm Technologies, Inc. Cape LTE";
+	compatible = "qcom,cape";
+	qcom,msm-id = <QCOM_ID_SM8475_2 0x10000>;
+};

@@ -1,0 +1,14 @@
+// SPDX-License-Identifier: BSD-3-Clause
+// SPDX-FileCopyrightText: 2026 The PenguinOS Project
+
+/dts-v1/;
+
+#include <dt-bindings/arm/qcom,ids.h>
+
+#include "capep.dtsi"
+
+/ {
+	model = "Qualcomm Technologies, Inc. CapeP SoC";
+	compatible = "qcom,capep";
+	qcom,board-id = <0 0>;
+};

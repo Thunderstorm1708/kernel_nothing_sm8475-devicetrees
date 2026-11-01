@@ -1,0 +1,283 @@
+// SPDX-License-Identifier: BSD-3-Clause
+// SPDX-FileCopyrightText: 2026 The PenguinOS Project
+
+#include <dt-bindings/clock/qcom,sm8450-dispcc.h>
+
+#include "cape-sde-display-pinctrl.dtsi"
+#include "dsi-panel-nt37705-visionox-dsc-fhd-plus-120hz-cmd.dtsi"
+#include "dsi-panel-rm692e5-visionox-dsc-fhd-plus-120hz-cmd.dtsi"
+
+&soc {
+	display_panel_avdd: display_gpio_regulator@1 {
+		compatible = "qti-regulator-fixed";
+		regulator-name = "display_panel_avdd";
+		regulator-min-microvolt = <5500000>;
+		regulator-max-microvolt = <5500000>;
+		regulator-enable-ramp-delay = <233>;
+		gpio = <&tlmm 186 0>;
+		enable-active-high;
+		regulator-boot-on;
+		proxy-supply = <&display_panel_avdd>;
+		qcom,proxy-consumer-enable;
+		pinctrl-names = "default";
+		pinctrl-0 = <&display_panel_avdd_default>;
+	};
+
+	sde_wb: qcom,wb-display@0 {
+		compatible = "qcom,wb-display";
+		cell-index = <0>;
+		label = "wb_display";
+	};
+
+	disp_rdump_memory: disp_rdump_region@e1000000 {
+		reg = <0xb8000000 0x00800000>;
+		label = "disp_rdump_region";
+	};
+
+	vddic_1v8: vddic_1v8 {
+		compatible = "qti-regulator-fixed";
+		regulator-name = "vddic_1v8";
+		startup-delay-us = <0>;
+		enable-active-high;
+		regulator-boot-on;
+		gpio = <&tlmm 62 0>;
+	};
+
+	dsi_panel_4_pwr_supply_amoled: dsi_panel_4_pwr_supply_amoled {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		qcom,panel-supply-entry@0 {
+			reg = <0>;
+			qcom,supply-name = "vddio";
+			qcom,supply-min-voltage = <1800000>;
+			qcom,supply-max-voltage = <1980000>;
+			qcom,supply-enable-load = <200000>;
+			qcom,supply-disable-load = <80>;
+			qcom,supply-post-on-sleep = <2>;
+		};
+
+		qcom,panel-supply-entry@1 {
+			reg = <1>;
+			qcom,supply-name = "vddic_1v8";
+			qcom,supply-min-voltage = <1800000>;
+			qcom,supply-max-voltage = <1800000>;
+			qcom,supply-enable-load = <200000>;
+			qcom,supply-disable-load = <0>;
+			qcom,supply-post-on-sleep = <2>;
+			qcom,supply-post-off-sleep = <20>;
+		};
+
+		qcom,panel-supply-entry@2 {
+			reg = <2>;
+			qcom,supply-name = "vci";
+			qcom,supply-min-voltage = <3000000>;
+			qcom,supply-max-voltage = <3544000>;
+			qcom,supply-enable-load = <10000>;
+			qcom,supply-disable-load = <0>;
+			qcom,supply-pre-on-sleep = <2>;
+			qcom,supply-post-on-sleep = <20>;
+			qcom,supply-post-off-sleep = <2>;
+		};
+	};
+
+	sde_dsi: qcom,dsi-display-primary {
+		compatible = "qcom,dsi-display";
+		label = "primary";
+
+		qcom,dsi-ctrl = <&mdss_dsi0 &mdss_dsi1>;
+		qcom,dsi-phy = <&mdss_dsi_phy0 &mdss_dsi_phy1>;
+
+		pinctrl-names = "panel_active", "panel_suspend";
+		pinctrl-0 = <&sde_dsi_active &sde_te_active>;
+		pinctrl-1 = <&sde_dsi_suspend &sde_te_suspend>;
+
+		qcom,platform-te-gpio = <&tlmm 86 0>;
+		qcom,panel-te-source = <0>;
+
+		qcom,mdp = <&mdss_mdp>;
+		qcom,dsi-default-panel = <&dsi_nt37705_visionox_amoled_120hz_cmd>;
+		qcom,demura-panel-id = <0x0122e700 0x000000b0>;
+	};
+
+	sde_dsi1: qcom,dsi-display-secondary {
+		compatible = "qcom,dsi-display";
+		label = "secondary";
+
+		qcom,dsi-ctrl = <&mdss_dsi0 &mdss_dsi1>;
+		qcom,dsi-phy = <&mdss_dsi_phy0 &mdss_dsi_phy1>;
+
+		pinctrl-names = "panel_active", "panel_suspend";
+		pinctrl-0 = <&sde_dsi1_active &sde_te1_active>;
+		pinctrl-1 = <&sde_dsi1_suspend &sde_te1_suspend>;
+
+		qcom,platform-te-gpio = <&tlmm 87 0>;
+		qcom,panel-te-source = <1>;
+
+		qcom,mdp = <&mdss_mdp>;
+		qcom,demura-panel-id = <0x0 0x0>;
+	};
+};
+
+&reserved_memory {
+	splash_memory: splash_region {
+		reg = <0x0 0xb8000000 0x0 0x02b00000>;
+		label = "cont_splash_region";
+	};
+};
+
+&sde_dsi {
+	clocks = <&mdss_dsi_phy0 0>,
+		 <&mdss_dsi_phy0 1>,
+		 <&mdss_dsi_phy1 2>,
+		 <&mdss_dsi_phy1 3>,
+		 <&dispcc DISP_CC_MDSS_MDP_CLK>;
+	clock-names = "pll_byte_clk0", "pll_dsi_clk0",
+		      "pll_byte_clk1", "pll_dsi_clk1",
+		      "mdp_core_clk";
+
+	vddio-supply = <&L12C>;
+	vdd-supply = <&L13C>;
+	vci-supply = <&L13C>;
+};
+
+&sde_dsi1 {
+	clocks = <&mdss_dsi_phy0 0>,
+		 <&mdss_dsi_phy0 1>,
+		 <&mdss_dsi_phy1 2>,
+		 <&mdss_dsi_phy1 3>,
+		 <&dispcc DISP_CC_MDSS_MDP_CLK>;
+	clock-names = "pll_byte_clk0", "pll_dsi_clk0",
+		      "pll_byte_clk1", "pll_dsi_clk1",
+		      "mdp_core_clk";
+
+	vddio-supply = <&L12C>;
+	vci-supply = <&L13C>;
+	extvdd-supply = <&L1D>;
+};
+
+&mdss_mdp {
+	connectors = <&sde_dsi &sde_dsi1 &smmu_sde_unsec &smmu_sde_sec &sde_wb &sde_rscc>;
+};
+
+&dsi_nt37705_visionox_amoled_120hz_cmd {
+	qcom,esd-check-enabled;
+	qcom,mdss-dsi-panel-status-check-mode = "reg_read";
+	qcom,mdss-dsi-panel-status-command = [06 01 00 01 00 00 01 0a];
+	qcom,mdss-dsi-panel-status-command-state = "dsi_lp_mode";
+	qcom,mdss-dsi-panel-status-value = <0x9C>;
+	qcom,mdss-dsi-panel-status-read-length = <1>;
+
+	set-frame-command = "0x39 0x01 0x00 0x01 0x00 0x00 0x02 0x2F 0x30";
+	disable-skip-frame-command = "0x39 0x01 0x00 0x01 0x00 0x00 0x02 0x2F 0x00";
+	get-reg2f-value-command = "0x01 0x06 0x01 0x00 0x01 0x00 0x00 0x01 0x2F";
+	get-reg6d-value-command = "0x02 0x06 0x01 0x00 0x01 0x00 0x00 0x01 0x6D";
+
+	switch-te-not-follow-source-command = "0x39 0x01 0x00 0x01 0x00 0x00 0x02 0x5A 0x00";
+	switch-te-follow-source-command = "0x39 0x01 0x00 0x01 0x00 0x00 0x02 0x5A 0x01";
+	switch-30hz-dimming-command = "0x39 0x01 0x00 0x01 0x00 0x00 0x03 0x6D 0x02 0x01";
+	switch-10hz-dimming-command = "0x39 0x01 0x00 0x01 0x00 0x00 0x03 0x6D 0x04 0x01";
+	switch-1hz-dimming-command = "0x39 0x01 0x00 0x01 0x00 0x00 0x03 0x6D 0x05 0x01";
+
+	switch-60hz-no-dimming-command = "0x39 0x01 0x00 0x01 0x00 0x00 0x03 0x6D 0x00 0x00";
+	switch-30hz-no-dimming-command = "0x39 0x01 0x00 0x01 0x00 0x00 0x03 0x6D 0x06 0x00";
+	switch-24hz-no-dimming-command = "0x39 0x01 0x00 0x01 0x00 0x00 0x03 0x6D 0x03 0x00";
+	switch-10hz-no-dimming-command = "0x39 0x01 0x00 0x01 0x00 0x00 0x03 0x6D 0x07 0x00";
+	switch-1hz-no-dimming-command = "0x39 0x01 0x00 0x01 0x00 0x00 0x03 0x6D 0x05 0x00";
+
+	qcom,dsi-select-clocks = "pll_byte_clk0", "pll_dsi_clk0";
+	qcom,dynamic-mode-switch-enabled;
+	qcom,dynamic-mode-switch-type = "dynamic-resolution-switch-immediate";
+	qcom,dsi-dyn-clk-enable;
+	qcom,mdss-dsi-display-timings {
+		timing@0 {
+			qcom,mdss-dsi-panel-phy-timings = [00 24 09 09 1A 24 09
+					09 09 02 04 00 1E 0E];
+			qcom,display-topology = <1 1 1>;
+			qcom,default-topology-index = <0>;
+			qcom,dsi-dyn-clk-list = <897000000>;
+		};
+		timing@1 {
+			qcom,mdss-dsi-panel-phy-timings = [00 1C 07 07 17 21 07
+					07 08 02 04 00 18 0C];
+			qcom,display-topology = <1 1 1>;
+			qcom,default-topology-index = <0>;
+			qcom,dsi-dyn-clk-list = <897000000>;
+		};
+		timing@2 {
+			qcom,mdss-dsi-panel-phy-timings = [00 24 09 09 1A 24 09
+					09 09 02 04 00 1E 0E];
+			qcom,display-topology = <1 1 1>;
+			qcom,default-topology-index = <0>;
+			qcom,dsi-dyn-clk-list = <897000000>;
+		};
+	};
+};
+
+&dsi_nt37705_visionox_amoled_120hz_cmd {
+	qcom,panel-supply-entries = <&dsi_panel_4_pwr_supply_amoled>;
+	qcom,mdss-dsi-bl-pmic-control-type = "bl_ctrl_dcs";
+	qcom,mdss-dsi-bl-min-level = <10>;
+	qcom,mdss-dsi-bl-max-level = <4095>;
+	qcom,mdss-dsi-bl-hbm-level = <4080>;
+	qcom,mdss-brightness-max-level = <4095>;
+	qcom,mdss-dsi-bl-inverted-dbv;
+	qcom,platform-reset-gpio = <&tlmm 0 0>;
+};
+
+&dsi_rm692e5_visionox_amoled_120hz_cmd {
+	//qcom,esd-check-enabled;
+	qcom,mdss-dsi-panel-status-check-mode = "reg_read";
+	qcom,mdss-dsi-panel-status-command = [06 01 00 01 00 00 01 0a];
+	qcom,mdss-dsi-panel-status-command-state = "dsi_lp_mode";
+	qcom,mdss-dsi-panel-status-value = <0x9C>;
+	qcom,mdss-dsi-panel-status-read-length = <1>;
+
+	qcom,dsi-select-clocks = "pll_byte_clk0", "pll_dsi_clk0";
+	qcom,dynamic-mode-switch-enabled;
+	qcom,dynamic-mode-switch-type = "dynamic-resolution-switch-immediate";
+	qcom,mdss-dsi-display-timings {
+		timing@0 {
+			qcom,mdss-dsi-panel-phy-timings = [00 1c 07 07 17 16 07
+					07 08 02 04 00 18 0c];
+			qcom,display-topology = <1 1 1>;
+			qcom,default-topology-index = <0>;
+		};
+		timing@1 {
+			qcom,mdss-dsi-panel-phy-timings = [00 16 05 05 14 1f 06
+					06 06 02 04 00 13 0b];
+			qcom,display-topology = <1 1 1>;
+			qcom,default-topology-index = <0>;
+		};
+		timing@2 {
+			qcom,mdss-dsi-panel-phy-timings = [00 11 03 04 12 1e 04
+					04 03 02 04 00 0e 09];
+			qcom,display-topology = <1 1 1>;
+			qcom,default-topology-index = <0>;
+		};
+	};
+};
+
+&dsi_rm692e5_visionox_amoled_120hz_cmd {
+	qcom,panel-supply-entries = <&dsi_panel_4_pwr_supply_amoled>;
+	qcom,mdss-dsi-bl-pmic-control-type = "bl_ctrl_dcs";
+	qcom,mdss-dsi-bl-min-level = <10>;
+	qcom,mdss-dsi-bl-max-level = <4095>;
+	qcom,mdss-brightness-max-level = <4095>;
+	qcom,mdss-dsi-bl-inverted-dbv;
+	qcom,platform-reset-gpio = <&tlmm 0 0>;
+};
+
+&qupv3_se4_spi {
+	touchscreen@0 {
+		panel = <&dsi_rm692e5_visionox_amoled_120hz_cmd
+			 &dsi_nt37705_visionox_amoled_120hz_cmd>;
+	};
+};
+
+&soc {
+	goodix_fp@0 {
+		panel = <&dsi_rm692e5_visionox_amoled_120hz_cmd
+			 &dsi_nt37705_visionox_amoled_120hz_cmd>;
+	};
+};

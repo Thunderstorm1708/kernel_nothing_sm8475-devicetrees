@@ -1,0 +1,102 @@
+// SPDX-License-Identifier: BSD-3-Clause
+/*
+ * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+ */
+
+/dts-v1/;
+
+#include "lemans-vm.dtsi"
+#include "lemans-vm-la-mt.dtsi"
+
+/ {
+	model = "Qualcomm Technologies, Inc. Lemans Multi LA Prime Virtual Machine";
+	compatible = "qcom,lemans", "qcom,quinvm";
+	qcom,board-id = <0x0 0x2100001>;
+	qcom,sdp = <0x2c6>;
+};
+
+&usb2 {
+	status = "disabled";
+};
+
+&usb2_phy2 {
+	status = "disabled";
+};
+
+&virtio_glink_cma {
+	status = "disabled";
+};
+
+&pcie0 {
+	status = "disabled";
+};
+
+&pcie0_msi_snps {
+	status = "disabled";
+};
+
+&qupv3_2 {
+	status = "disabled";
+};
+
+&qupv3_se17_4uart {
+	status = "disabled";
+};
+
+&ethernet1 {
+	status = "disabled";
+};
+
+&serdes1 {
+	status = "disabled";
+};
+
+&hsi2s {
+	status = "disabled";
+};
+
+&ipcc_compute_l0_apps_ns1 {
+	status = "disabled";
+};
+
+&ipcc_mproc_apps_ns1 {
+	status = "disabled";
+};
+
+&qupv3_0 {
+	status = "disabled";
+};
+
+&qupv3_se3_4uart {
+	status = "disabled";
+};
+
+&qcom_rng_ee3 {
+	status = "disabled";
+};
+
+&tlmm {
+	status = "disabled";
+};
+
+&ufs2phy_mem {
+	status = "disabled";
+};
+
+&ufshc2_mem {
+	status = "disabled";
+};
+
+&pdc {
+	status = "disabled";
+};
+
+&soc {
+	qcom,mpm2-sleep-counter@c221000 {
+		status = "disabled";
+	};
+
+	ptp_virtual {
+		status = "disabled";
+	};
+};

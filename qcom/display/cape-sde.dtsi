@@ -1,0 +1,57 @@
+// SPDX-License-Identifier: BSD-3-Clause
+// SPDX-FileCopyrightText: 2026 The PenguinOS Project
+
+#include "waipio-sde.dtsi"
+
+&sde_dp {
+	qcom,pll-revision = "4nm-v1";
+	vdda-1p2-supply = <&L10C>;
+};
+
+&mdss_mdp {
+	qcom,sde-vbif-default-ot-rd-limit = <40>;
+	qcom,sde-vbif-qos-offline-wb-remap = <3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3>;
+	qcom,sde-vbif-qos-cnoc-remap = <3 3 4 4 5 5 5 5 3 3 3 3 3 3 3 3>;
+};
+
+&mdss_dsi0 {
+	vdda-1p2-supply = <&L10C>;
+
+	qcom,ctrl-supply-entries {
+		qcom,ctrl-supply-entry@0 {
+			qcom,supply-max-voltage = <1304000>;
+		};
+	};
+};
+
+&mdss_dsi1 {
+	vdda-1p2-supply = <&L10C>;
+
+	qcom,ctrl-supply-entries {
+		qcom,ctrl-supply-entry@0 {
+			qcom,supply-max-voltage = <1304000>;
+		};
+	};
+};
+
+&mdss_dsi_phy0 {
+	compatible = "qcom,dsi-phy-v4.3.2";
+	/delete-property/ qcom,dsi-pll-ssc-en;
+
+	qcom,phy-supply-entries {
+		qcom,phy-supply-entry@0 {
+			qcom,supply-max-voltage = <958000>;
+		};
+	};
+};
+
+&mdss_dsi_phy1 {
+	compatible = "qcom,dsi-phy-v4.3.2";
+	/delete-property/ qcom,dsi-pll-ssc-en;
+
+	qcom,phy-supply-entries {
+		qcom,phy-supply-entry@0 {
+			qcom,supply-max-voltage = <958000>;
+		};
+	};
+};

@@ -1,0 +1,20 @@
+// SPDX-License-Identifier: BSD-3-Clause
+// SPDX-FileCopyrightText: 2026 The PenguinOS Project
+
+/dts-v1/;
+/plugin/;
+
+#include <dt-bindings/arm/qcom,ids.h>
+
+#include "cape-pong.dtsi"
+
+#include "audio/cape-pong-audio.dtsi"
+#include "camera/agenda-camera-sensor.dtsi"
+#include "display/cape-pong-display.dtsi"
+
+/ {
+	model = "Nothing Phone (2)";
+	compatible = "nothing,phone2", "qcom,cape";
+	qcom,msm-id = <QCOM_ID_SM8475 0x10000>, <531 0x10000>, <540 0x10000>;
+	qcom,board-id = <0x1000B 0>;
+};
